@@ -4,7 +4,7 @@ const app = express();
 
 
 app.get('/', (req, res) => {
-  res.send('wsg');
+  res.send('cro');
 });
 
 app.listen(3000, () => {

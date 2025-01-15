@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsx server/index.ts"
+    "dev": "tsx watch server/index.ts"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,6 @@
   "homepage": "https://github.com/raf-ent/realtime-chat#readme",
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "nodemon": "^3.1.9",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
