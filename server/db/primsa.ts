@@ -1,5 +1,3 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { PrismaClient as prisma } from "@prisma/client";
 
 export default prisma;

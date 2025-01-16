@@ -36,8 +36,8 @@ model Conversation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   users  User[]
-  userIDs String[]
+  //userIDs String[]
   messages   Message[]
-  messageIDs String[]
+  //messageIDs String[]
 }
 
