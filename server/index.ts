@@ -4,8 +4,6 @@ import msgRouter from './routes/msgRouter';
 
 const app = express();
 
-// url: /api/auth
-
 
 app.use("/api/auth", authRouter);
 app.use("/api/messages", msgRouter);

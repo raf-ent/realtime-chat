@@ -1,22 +1,16 @@
 import { Router } from 'express';
+import { login, logout, register } from '../controllers/authController';
 
 const authRouter = Router();
 
-// url: /api/auth/..
+// url: localhost:3000/api/auth/..
 
 
-authRouter.get('/login', (req, res) => {
-  res.send('Login route');
-});
+authRouter.get('/login', login);
 
-authRouter.get('/logout', (req, res) => {
-    res.send('Logout route');
-});
+authRouter.get('/logout', logout);
 
-authRouter.get('/register', (req, res) => {
-  res.send('Register route');
-});
-
+authRouter.get('/register', register);
 
 
 
