@@ -18,9 +18,14 @@
   },
   "homepage": "https://github.com/raf-ent/realtime-chat#readme",
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "eslint": "^9.18.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",

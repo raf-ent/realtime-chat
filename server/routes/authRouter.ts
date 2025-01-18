@@ -10,7 +10,7 @@ authRouter.get('/login', login);
 
 authRouter.get('/logout', logout);
 
-authRouter.get('/register', register);
+authRouter.post('/register', register);
 
 
 
