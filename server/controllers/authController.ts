@@ -3,38 +3,58 @@ import prisma from "../db/prisma";
 import bcryptjs from "bcryptjs";
 import genToken from "../utils/jwt";
 
-const login = (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
   try {
     const { username, plainPassword, confirm } = req.body;
 
     if (!username || !plainPassword || !confirm) {
-       return res.status(400).json({ error: "All fields are required" });
+       res.status(400).json({ error: "All fields are required" });
+       return;
     }
 
     if (plainPassword !== confirm) {
-       return res.status(400).json({ error: "Passwords do not match" });
+       res.status(400).json({ error: "Passwords do not match" });
+       return;
+
     }
 
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         username,
       },
     });
 
     if (!user) {
-       return res.status(400).json({ error: "Invalid credentials" });
+       res.status(400).json({ error: "Invalid credentials" });
+       return;
+
     }
+
+    const passwordMatch = await bcryptjs.compare(plainPassword, user.password);
+
+    if (!passwordMatch) {
+       res.status(400).json({ error: "Invalid credentials" });
+       return;
+
+    }
+    else {
+      genToken(user.id, res);
+       res.status(200).json({
+        user,
+        message: "Login successful" });
+      return;
+
+    }
+
 
   } catch (error: any) {
     console.log("login error", error.message);
-    return res.status(500).json({ error: "server error" });
+     res.status(500).json({ error: "server error" });
+     return;
   }
 
 };
-const logout = async (req: Request, res: Response) => {
-    
-};
-
+const logout = async (req: Request, res: Response) => {};
 
 const register = async (req: Request, res: Response) => {
   try {
@@ -42,10 +62,12 @@ const register = async (req: Request, res: Response) => {
 
     // check if all fields are provided
     if (!fullname || !username || !plainPassword || !confirm) {
-       return res.status(400).json({ error: "All fields are required" });
+       res.status(400).json({ error: "All fields are required" });
+       return;
     }
     if (plainPassword !== confirm) {
-       return res.status(400).json({ error: "Passwords do not match" });
+       res.status(400).json({ error: "Passwords do not match" });
+       return;
     }
 
     // check if user already exists
@@ -55,14 +77,17 @@ const register = async (req: Request, res: Response) => {
       },
     });
     if (user) {
-       return res.status(400).json({ error: "Username already taken" });
+       res.status(400).json({ error: "Username already taken" });
+       return;
     }
 
     // hash password
     const password = await bcryptjs.hash(plainPassword, 10);
 
     // generate profile picture
-    const pfp = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullname)}&size=250`;
+    const pfp = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      fullname
+    )}&size=250`;
 
     // create new user
     const newUser = await prisma.user.create({
@@ -76,20 +101,23 @@ const register = async (req: Request, res: Response) => {
 
     // generate token
     if (newUser) {
-        genToken(newUser.username, res);
-         return res.status(201).json({
-            newUser,
-            message: "User created successfully",
+      genToken(newUser.id, res);
+       res.status(201).json({
+        newUser,
+        message: "User created successfully",
       });
+      return;
     } else {
-       return res.status(400).json({ error: "Invalid data" });
+       res.status(400).json({ error: "Invalid data" });
+       return;
     }
 
 
 
   } catch (error: any) {
     console.log("registration error", error.message);
-    return res.status(500).json({ error: "server error" });
+     res.status(500).json({ error: "server error" });
+     return;
   }
 };
 

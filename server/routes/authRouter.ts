@@ -6,9 +6,9 @@ const authRouter = Router();
 // url: localhost:3000/api/auth/..
 
 
-authRouter.get('/login', login);
+authRouter.post('/login', login);
 
-authRouter.get('/logout', logout);
+authRouter.post('/logout', logout);
 
 authRouter.post('/register', register);
 
