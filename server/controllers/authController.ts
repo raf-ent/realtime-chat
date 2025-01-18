@@ -1,14 +1,36 @@
 import { Request, Response } from "express";
 import prisma from "../db/prisma";
 import bcryptjs from "bcryptjs";
-import token from "../utils/jwt";
-import dotenv from "dotenv";
+import genToken from "../utils/jwt";
 
+const login = (req: Request, res: Response) => {
+  try {
+    const { username, plainPassword, confirm } = req.body;
 
-dotenv.config();
+    if (!username || !plainPassword || !confirm) {
+       return res.status(400).json({ error: "All fields are required" });
+    }
 
-const login = (req: Request, res: Response) => {};
+    if (plainPassword !== confirm) {
+       return res.status(400).json({ error: "Passwords do not match" });
+    }
 
+    const user = prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) {
+       return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+  } catch (error: any) {
+    console.log("login error", error.message);
+    return res.status(500).json({ error: "server error" });
+  }
+
+};
 const logout = async (req: Request, res: Response) => {
     
 };
@@ -20,10 +42,10 @@ const register = async (req: Request, res: Response) => {
 
     // check if all fields are provided
     if (!fullname || !username || !plainPassword || !confirm) {
-       res.status(400).json({ error: "All fields are required" });
+       return res.status(400).json({ error: "All fields are required" });
     }
     if (plainPassword !== confirm) {
-       res.status(400).json({ error: "Passwords do not match" });
+       return res.status(400).json({ error: "Passwords do not match" });
     }
 
     // check if user already exists
@@ -33,7 +55,7 @@ const register = async (req: Request, res: Response) => {
       },
     });
     if (user) {
-       res.status(400).json({ error: "Username already taken" });
+       return res.status(400).json({ error: "Username already taken" });
     }
 
     // hash password
@@ -54,20 +76,20 @@ const register = async (req: Request, res: Response) => {
 
     // generate token
     if (newUser) {
-        token(newUser.username, res);
-         res.status(201).json({
+        genToken(newUser.username, res);
+         return res.status(201).json({
             newUser,
             message: "User created successfully",
       });
     } else {
-       res.status(400).json({ error: "Invalid data" });
+       return res.status(400).json({ error: "Invalid data" });
     }
 
 
 
   } catch (error: any) {
     console.log("registration error", error.message);
-     res.status(500).json({ error: "server error" });
+    return res.status(500).json({ error: "server error" });
   }
 };
 

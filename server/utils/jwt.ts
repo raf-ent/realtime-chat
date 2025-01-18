@@ -1,7 +1,7 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 
-const token = (user: string, res: Response) => {
+const genToken = (user: string, res: Response) => {
   jwt.sign({ user }, process.env.TOKEN_SECRET!, { expiresIn: "1d" }, (err, token) => {
       if (err) {
         console.log("jwt error", err.message);
@@ -13,10 +13,12 @@ const token = (user: string, res: Response) => {
             sameSite: "strict",
             maxAge: 24*3600*1000,
         });
+
+        return token;
       }
     }
   );
 };
 
 
-export default token;
+export default genToken;
