@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { login, logout, register, getProfile } from '../controllers/authController';
-import verifyProfile from '../middleware/verifyProfile';
+import verifyProfile from '../middleware/protectRoute';
 
 const authRouter = Router();
 

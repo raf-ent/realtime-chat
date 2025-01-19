@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import verifyProfile from '../middleware/verifyProfile';
-import sendMessage from '../controllers/msgController';
+import verifyProfile from '../middleware/protectRoute';
+import {sendMessage, getMessages, getConversations} from '../controllers/msgController';
 
 const msgRouter = Router();
 
@@ -8,7 +8,9 @@ const msgRouter = Router();
 
 msgRouter.post('/user/:id', verifyProfile, sendMessage);
 
-//msgRouter.get('/user/:id', verifyProfile, getMessages);
+msgRouter.get('/user/:id', verifyProfile, getMessages);
+
+msgRouter.get('/conversations', verifyProfile, getConversations);
 
 
 export default msgRouter;
