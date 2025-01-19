@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../db/prisma";
 import bcryptjs from "bcryptjs";
-import genToken from "../utils/jwt";
+import genToken from "../utils/genToken";
 
 
 const login = async (req: Request, res: Response) => {
@@ -41,7 +41,10 @@ const login = async (req: Request, res: Response) => {
     else {
       genToken(user.id, res);
        res.status(200).json({
-        user,
+        id: user.id,
+        username: user.username,
+        fullname: user.fullname,
+        pfp: user.pfp,
         message: "Login successful" });
       return;
 
@@ -55,14 +58,15 @@ const login = async (req: Request, res: Response) => {
   }
 
 };
+
 const logout = async (req: Request, res: Response) => {
   try {
 		res.cookie("jwt", "", { maxAge: 0 });
 		res.status(200).json({ message: "Logged out successfully" });
-    
+
 	} catch (error: any) {
 		console.log("Error in logout controller", error.message);
-		res.status(500).json({ error: "Internal Server Error" });
+		res.status(500).json({ error: "server error" });
 	}
 
 };
@@ -114,7 +118,10 @@ const register = async (req: Request, res: Response) => {
     if (newUser) {
       genToken(newUser.id, res);
        res.status(201).json({
-        newUser,
+        id: newUser.id,
+        username: newUser.username,
+        fullname: newUser.fullname,
+        pfp: newUser.pfp,
         message: "User created successfully",
       });
       return;
@@ -132,7 +139,34 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
+const getProfile = async (req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user) {
+       res.status(404).json({ error: "User not found" });
+       return;
+    }
+      res.status(200).json({
+        id: user.id,
+        username: user.username,
+        fullname: user.fullname,
+        pfp: user.pfp
+      });
+
+      return;
+
+  } catch (error: any) {
+    console.log("getProfile error", error.message);
+     res.status(500).json({ error: "server error" });
+     return;
+    
+  }
+}
 
 
 
-export { login, logout, register };
+
+export { login, logout, register, getProfile};
