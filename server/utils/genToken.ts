@@ -13,7 +13,7 @@ const genToken = (userID: string, res: Response) => {
     maxAge: 24 * 3600 * 1000,
   });
 
-  return token;
+  return;
 };
 
 export default genToken;

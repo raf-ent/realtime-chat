@@ -24,7 +24,7 @@ const verifyProfile = async (req: Request, res: Response, next: NextFunction) =>
         const token = req.cookies.jwt;
 
         if (!token) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(400).json({ error: "No token provided" });
             return;
         }
         
