@@ -3,3 +3,4 @@ makefile
 .vscode
 .env
 tests
+client
